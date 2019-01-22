@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import Stack from './routes';
-export default class App extends Component {
+
+export default class Menu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -10,7 +10,9 @@ export default class App extends Component {
 
   render() {
     return (
-     <Stack/>
+      <View>
+        <Text> textInComponent </Text>
+      </View>
     );
   }
 }
