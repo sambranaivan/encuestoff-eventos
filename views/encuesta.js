@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, Image, AsyncStorage} from 'react-native';
 import { Constants } from 'expo';
 import t from 'tcomb-form-native';
 
@@ -139,15 +139,42 @@ var options = {
     }
 };
 
+const info = [];
+
+
 
 export default class Encuesta extends React.Component {
-    handleSubmit = () => {
+    handleSubmit = async () => {
         // do the things  
         const value = this._form.getValue(); // use that ref to get the form value
-        console.log('value: ', value);
+        
 
-        // MANDAR value a la funcion de guardar
+        // refresco el estado de la variable info
+        this.Refresh;
+
+        console.log(info);
+        
+        
+
+
     }
+
+    Refresh = async () => {
+        try {
+            let _info = await AsyncStorage.getItem('info');
+            if (_info !== null) {//ya hay datos entonces refresco
+                info = _info
+            }
+            else {
+                ///esta vacio inicio la variable en vacio
+                AsyncStorage.setItem('info','[]');//array vacio en string
+            }
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    
 
     render() {
         return (
