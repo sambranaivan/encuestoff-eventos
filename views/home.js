@@ -9,6 +9,55 @@ export default class Home extends Component {
   }
 
   
+
+  enviar = async () => {
+
+   try {
+     let data = await AsyncStorage.getItem('data');
+     if (data !== null)//ya hay algo cargado?
+     {
+      // enviar la data
+
+       // http://localhost/apiEncuestoff/public/api/carnaval/send
+       const myRequest = new Request('http://192.168.1.15/apiEncuestoff/public/api/carnaval/send',
+         {
+           method: 'POST',
+           body: data
+         });
+
+
+       fetch(myRequest)
+         .then(response => {
+           if (response.status === 200) {
+             alert('Actualizado')
+           } else {
+             console.log(data);
+             throw new Error('Something went wrong on api server!');
+           }
+         })
+         .then(response => {
+           // console.log("Debug")
+           console.debug(response);
+           // ...
+         }).catch(error => {
+           console.error(error);
+         });
+
+      // fin de envio
+     }
+     else
+     {
+       alert("No Hay Encuestas que Enviar")
+     }
+
+     
+   } catch (error) {
+     alert(error)
+   }
+
+
+  }
+  
   saveData = async () => {
    try {
      
@@ -49,14 +98,9 @@ export default class Home extends Component {
 
   ViewData = async()=>{
     try {
-      let user = await AsyncStorage.getItem('contador');
-      if (user !== null) {
-        // We have data!!
-        alert(user);
-      }
-      else{
-        alert('Vacio');
-      }
+      let data = await AsyncStorage.getItem('data');
+     alert(data);
+    
     } catch (error) {
       alert(error)
     }
@@ -83,7 +127,7 @@ export default class Home extends Component {
       <View style={styles.container}>
       <Button title="Nueva Encuesta" onPress={() => this.props.navigation.navigate("Encuesta")}/>
       <Text></Text>
-        <Button title="Subir Encuesstas" onPress={() => this.props.navigation.navigate("Sincro")} />
+        <Button title="Subir Encuestas" onPress={this.enviar}/>
         <TouchableOpacity onPress={this.saveData}>
           <Text>Guardar</Text>
         </TouchableOpacity>

@@ -128,36 +128,47 @@ const info = [];
 
 
 export default class Encuesta extends React.Component {
-    handleSubmit = async () => {
-        // do the things  
-        const value = this._form.getValue(); // use that ref to get the form value
-        
+   
 
-        // refresco el estado de la variable info
-        this.Refresh;
-
-        console.log(info);
-        
-        
-
-
-    }
-
-    Refresh = async () => {
+    saveData = async () => {
         try {
-            let _info = await AsyncStorage.getItem('info');
-            if (_info !== null) {//ya hay datos entonces refresco
-                info = _info
-            }
-            else {
-                ///esta vacio inicio la variable en vacio
-                AsyncStorage.setItem('info','[]');//array vacio en string
-            }
-        } catch (error) {
-            alert(error)
-        }
-    }
+            const nuevo = this._form.getValue(); // use that ref to get the form value
+            ///get current data
+            let data = await AsyncStorage.getItem('data');
+            if (data !== null)//ya hay algo cargado?
+            {
+                //convierto string a objeto !
+                var data = JSON.parse(data);
+                //nuevo objeto 
+                // var nuevo = { nombre: 'ivan', apellido: 'sambrana' };
+                
+                //inserto nuevo objeto
+                data.push(nuevo);
+                //convierto de nuevo a string!
+                data = JSON.stringify(data);
+                //guardo en el coso
+                AsyncStorage.setItem('data', data);
+                //muestro en consola
+                console.log("data")
+                console.log(data);
 
+            }
+            else {//es el primero asi que se inicializa
+                data = [];
+                data.push(nuevo);
+                AsyncStorage.setItem('data', JSON.stringify(data));
+                console.log("array")
+                console.log(data);
+
+            }
+
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+  
     
 
     render() {
@@ -185,7 +196,7 @@ export default class Encuesta extends React.Component {
 
                         <Button
                             title="Enviar"
-                            onPress={this.handleSubmit}
+                            onPress={this.saveData}
                         />
                     </View >
                 </ScrollView>
