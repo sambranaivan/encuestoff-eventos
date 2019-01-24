@@ -5,24 +5,17 @@ import t from 'tcomb-form-native';
 
 const Form = t.form.Form;
 
+// // // // // // // // // // // // 
+// Esto va a cambiar a cada rato
+
 const User = t.struct({
     procedencia: t.String,
     sexo: t.enums({
         'F': 'Femenino',
         'M': 'Masculino'
     }, 'Sexo'),
-    edada: t.Boolean,
-    edadb: t.Boolean,
-    edadc: t.Boolean,
-    edadd: t.Boolean,
-    edade: t.Boolean,
-    profesion: t.enums({
-        'Empleado': 'Empleado',
-        'Estudiante': 'Estudiante',
-        'Ama de Casa': 'Ama de Casa',
-        'Desocupado': 'Desocupado',
-        'Otro': 'Otro'
-    }),
+    edad: t.Number,
+  
     viaje: t.enums({
         'Solo': 'Solo',
         'Pareja': 'Pareja',
@@ -30,23 +23,22 @@ const User = t.struct({
         'Amigos': 'Amigos',
     }),
     informo: t.enums({
-        internet: 'Internet, Redes Sociales',
-        medios: 'Medios de Comunicación'
+        internet: 'Redes Sociales (Facebook, Instagram, Twitter, Whatsapp)',
+        medios: 'Medios de Comunicación (tv, radio)'
     }),
     motivo: t.enums({
-        ocio: 'Ocio, Recreación, Vacaciones',
-        religion: 'Medios de Comunicación',
+        vacaciones: 'Vacaciones',
+        religion: 'Religion',
         trabajo: "Trabajo",
         visita: "Visita Flia/Amigos",
         salud: "Salud",
         otro: "Otro"
     }),
     transporte: t.enums({
+        omnibus: 'Omnibus',
+        auto: 'Automovil',
         corrientes: 'Aeropuerto Corrientes',
         resistencia: 'Aeropuerto Resistencia',
-        auto: 'Automovil',
-        omnibus: 'Omnibus',
-        motorhome: 'Motorhome',
         moto: 'Moto',
         otro: 'Otro'
     }),
@@ -61,6 +53,11 @@ const User = t.struct({
         santaana: 'Santa Ana de los Guacaras',
         resistencia: 'Resistencia'
     }),
+    tipoalojamiento: t.enums({
+       hotel:"hotel",
+       casa:"casa",
+       dpto:"departamento"
+    }),
 
     primeravez: t.enums({
         si: 'Si',
@@ -73,21 +70,12 @@ const User = t.struct({
 
     gastos: t.enums(
         {
-            a: 'Menos de $2000',
-            b: 'de $2.000 a $5.000',
-            c: 'entre $5.000 y $10.000',
-            d: 'Más de $20.000',
+            a: 'Menos de $500',
+            b: 'de $500 a $1.000',
+            c: 'entre $1.000 y $3.000',
+            d: 'Más de $3.000',
             e: 'No sabe No Contesta'
         }),
-
-    calificacion: t.enums({
-        a: 'Exccelente',
-        b: 'Bueno',
-        c: 'Regular',
-        d: 'Malo',
-    }),
-
-
 });
 
 
@@ -114,30 +102,26 @@ var options = {
         alojamiento: {
             label: 'Donde se aloja durante su estadía?' // <= label for the name field
         },
+        tipoalojamiento: {
+            label: 'Que tipo de Alojamiento?' // <= label for the name field
+        },
         transporte: {
             label: 'Medio de transporte utilizado?' // <= label for the name field
         },
         primeravez: {
             label: 'Primera vez que?' // <= label for the name field
         },
-        edada: {
-            label: "Edad de 0 a 14 Años"
+        edad: {
+            label: "Edad"
         },
-        edadb: {
-            label: "de 15 a 24 Años"
-        },
-        edadc: {
-            label: "de 25 a 54 Años"
-        },
-        edade: {
-            label: "65 Años o más"
-        },
-        edadd: {
-            label: "de 55 a 64 Años"
-        },
-
+        
     }
 };
+
+
+//  
+// // // // // // // // // // // // 
+
 
 const info = [];
 
@@ -223,6 +207,7 @@ const styles = StyleSheet.create({
     padre: {
         flex: 1,
         paddingTop: Constants.statusBarHeight,
+        // backgroundColor: '#8fbd4d'
 
     },
     container: {
@@ -231,13 +216,15 @@ const styles = StyleSheet.create({
         // marginTop: 50,
         paddingLeft: 20,
         paddingRight: 20,
-
+        backgroundColor: '#8fbd4d',
+        
         // backgroundColor: '#ffffff',
     },
     titulo: {
         // justifyContent:'center',
         textAlign: 'center',
         fontWeight: 'bold',
+        color: "white",
         fontSize: 30,
         fontWeight: 'bold',
         flex: 9
