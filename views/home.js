@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Button, Image ,TouchableOpacity, AsyncStorage} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+import { Constants } from 'expo';
+
+const uniqueId = DeviceInfo.getUniqueID();
 
 export default class Home extends Component {
   constructor(props) {
@@ -11,7 +15,10 @@ export default class Home extends Component {
   
 
   enviar = async () => {
-
+    // let server = "192.168.1.15"//totolink
+    // let server = "10.1.17.203"//estadistica
+    let server = "13.90.59.76"//Azure Chamaoke
+    console.log("send data to "+server);
    try {
      let data = await AsyncStorage.getItem('data');
      if (data !== null)//ya hay algo cargado?
@@ -19,7 +26,7 @@ export default class Home extends Component {
       // enviar la data
 
        // http://localhost/apiEncuestoff/public/api/carnaval/send
-       const myRequest = new Request('http://192.168.1.15/apiEncuestoff/public/api/carnaval/send',
+       const myRequest = new Request('http://13.90.59.76/apiEncuestoff/public/api/carnaval/send',
          {
            method: 'POST',
            body: data
@@ -31,7 +38,7 @@ export default class Home extends Component {
            if (response.status === 200) {
              alert('Actualizado')
            } else {
-             console.log(data);
+             console.log(response);
              throw new Error('Something went wrong on api server!');
            }
          })
@@ -128,18 +135,19 @@ export default class Home extends Component {
       <Button title="Nueva Encuesta" onPress={() => this.props.navigation.navigate("Encuesta")}/>
       <Text></Text>
         <Button title="Subir Encuestas" onPress={this.enviar}/>
-        <TouchableOpacity onPress={this.saveData}>
+        
+        {/* <TouchableOpacity onPress={this.saveData} style ={styles.TouchableOpacity}>
           <Text>Guardar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={this.ViewData  }>
+        <TouchableOpacity onPress={this.ViewData  } style ={styles.TouchableOpacity}>
           <Text>Mostrar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={this.CleanData}>
+        <TouchableOpacity onPress={this.CleanData} style ={styles.TouchableOpacity}>
           <Text>Borrar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={this.Allkeys}>
+        <TouchableOpacity onPress={this.Allkeys} style ={styles.TouchableOpacity}>
           <Text>AllKeys</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       
       </View>
     );
@@ -149,8 +157,19 @@ export default class Home extends Component {
 
 const styles = StyleSheet.create({
   container:{
-    padding:100
+    flex: 1,
+    paddingTop: Constants.statusBarHeight,
+    // paddingLeft: 100,
+    // paddingRight: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#88b14b'
   },
+  TouchableOpacity: {
+    borderWidth: 1,
+    padding: 25,
+    borderColor: 'black'
+  }
  
 })
 
