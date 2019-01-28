@@ -48,7 +48,7 @@ const User = t.struct({
         moto: 'Moto',
         otro: 'Otro'
     }),
-    otro_transporte: t.String,//condicional de transporte de viaje
+    otro_transporte: t.maybe(t.String),//condicional de transporte de viaje
 
     alojamiento: t.enums({
         corrientes: 'Corrientes',
@@ -83,11 +83,19 @@ const User = t.struct({
             d: 'Más de $3.000',
             e: 'No sabe No Contesta'
         }),
+    userid: t.String,timestamp: t.maybe(t.String)
 });
 
 
 var options = {
     fields: {
+        userid:{
+            hidden:true
+        },
+        timestamp:{
+            hidden:true
+        },
+
         procedencia:{
             label: "Procedencia",
         },
@@ -144,7 +152,7 @@ var options = {
 };
 
 var default_values = {
-    procedencia:"Corrientes"
+    userid: Constants.installationId
 }
 //  
 // // // // // // // // // // // // 
@@ -180,9 +188,11 @@ export default class Encuesta extends React.Component {
 
     saveData = async () => {
         try {
-            const nuevo = this._form.getValue(); // use that ref to get the form value
+            
+            nuevo = this._form.getValue(); // use that ref to get the form value
             ///get current data
             if(!nuevo){
+                alert("complete todo los campos")
                 return
             }
             
@@ -215,7 +225,8 @@ export default class Encuesta extends React.Component {
             }
 
             alert("Encuesta Guardada")
-
+            this.setState({ value: null });
+            this.props.navigation.navigate("Home")
         } catch (error) {
             console.log(error)
         }
@@ -280,7 +291,9 @@ export default class Encuesta extends React.Component {
                 value.viaje_cantidad = 2;
             }
         }
-        
+
+        var d = new Date()
+        value.timestamp = d.getTime()+""
        
        
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView, Button, Image ,TouchableOpacity, AsyncStorage} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, Image ,TouchableOpacity, AsyncStorage, Platform} from 'react-native';
 
 import { Constants } from 'expo';
 
@@ -8,7 +8,9 @@ import { Constants } from 'expo';
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = 
+    {
+      timestamp: new Date().getTime()
     };
   }
 
@@ -131,24 +133,20 @@ export default class Home extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-      <Button title="Nueva Encuesta" onPress={() => this.props.navigation.navigate("Encuesta")}/>
-      <Text></Text>
-        <Button title="Subir Encuestas" onPress={this.enviar}/>
-        
-        {/* <TouchableOpacity onPress={this.saveData} style ={styles.TouchableOpacity}>
-          <Text>Guardar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.ViewData  } style ={styles.TouchableOpacity}>
-          <Text>Mostrar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.CleanData} style ={styles.TouchableOpacity}>
-          <Text>Borrar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.Allkeys} style ={styles.TouchableOpacity}>
-          <Text>AllKeys</Text>
-        </TouchableOpacity> */}
+      <View style={styles.padre}>
+        <View style={styles.container}>
+          <Button title="Nueva Encuesta" onPress={() => this.props.navigation.navigate("Encuesta")} />
+          <Text></Text>
+          <Button title="Subir Encuestas" onPress={this.enviar} />
+          {/* <Button title="Test" onPress={this.test} /> */}
+        </View>
+        <View style={styles.header}>
+          <Text>{Constants.installationId}</Text>
+          <Text>{this.state.timestamp}</Text>
+        </View>
       
+
+
       </View>
     );
   }
@@ -156,7 +154,19 @@ export default class Home extends Component {
 
 
 const styles = StyleSheet.create({
-  container:{
+  header:{
+    height: 50,
+  },
+  padre:{
+    flex: 1,
+    paddingTop: Constants.statusBarHeight,
+    // paddingLeft: 100,
+    // paddingRight: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#88b14b'
+  },
+  container: {
     flex: 1,
     paddingTop: Constants.statusBarHeight,
     // paddingLeft: 100,
