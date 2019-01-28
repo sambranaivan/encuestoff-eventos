@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Button, Image ,TouchableOpacity, AsyncStorage} from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+
 import { Constants } from 'expo';
 
-const uniqueId = DeviceInfo.getUniqueID();
+
 
 export default class Home extends Component {
   constructor(props) {
