@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Encuestas Carnaval",
-    "slug": "Encuestas Carnaval",
+    "slug": "encuestas_carnaval",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
