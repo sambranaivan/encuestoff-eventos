@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView, Button, Image ,TouchableOpacity, AsyncStorage, Platform} from 'react-native';
-
+import { StyleSheet, Text, View, ScrollView, Button, Image ,TouchableOpacity, AsyncStorage, Platform, Alert} from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { Constants } from 'expo';
 
 
@@ -10,8 +10,9 @@ export default class Home extends Component {
     super(props);
     this.state = 
     {
-      timestamp: new Date().getTime()
-    };
+      timestamp: new Date().getTime(),
+      spinner:false
+    }
   }
 
   
@@ -21,6 +22,7 @@ export default class Home extends Component {
     // let server = "10.1.17.203"//estadistica
     let server = "13.90.59.76"//Azure Chamaoke
     console.log("send data to "+server);
+    this.setState({spinner:true});
     
    try {
      let data = await AsyncStorage.getItem('data');
@@ -39,7 +41,16 @@ export default class Home extends Component {
        fetch(myRequest)
          .then(response => {
            if (response.status === 200) {
-             alert('Actualizado')
+             this.setState({ spinner: false });
+            //  alert('Actualizado')
+            Alert.alert(
+  'Encuestas Actualizas',
+  'Continuar',
+  [
+    {text: 'OK', onPress: () => console.log('OK Pressed')},
+  ],
+  {cancelable: false},
+);
            } else {
              console.log(response);
              throw new Error('Something went wrong on api server!');
@@ -57,6 +68,7 @@ export default class Home extends Component {
      }
      else
      {
+       this.setState({ spinner: false });
        alert("No Hay Encuestas que Enviar")
      }
 
@@ -67,6 +79,8 @@ export default class Home extends Component {
 
 
   }
+
+ 
   
   saveData = async () => {
    try {
@@ -137,6 +151,11 @@ export default class Home extends Component {
     return (
       <View style={styles.padre}>
         <View style={styles.container}>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Cargando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
           <Button title="Nueva Encuesta" onPress={() => this.props.navigation.navigate("Encuesta")} />
           <Text></Text>
           <Button title="Subir Encuestas" onPress={this.enviar} />
@@ -145,7 +164,7 @@ export default class Home extends Component {
         </View>
         <View style={styles.header}>
           <Text>{Constants.installationId}</Text>
-          <Text>{this.state.timestamp}</Text>
+          {/* <Text>{this.state.timestamp}</Text> */}
         </View>
       
 
@@ -182,7 +201,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 25,
     borderColor: 'black'
-  }
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
+  },
  
 })
 

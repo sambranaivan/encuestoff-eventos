@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "encuestoff",
-    "slug": "encuestoff",
+    "name": "Encuestas Carnaval",
+    "slug": "Encuestas Carnaval",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
