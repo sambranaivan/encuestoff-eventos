@@ -21,6 +21,7 @@ export default class Home extends Component {
     // let server = "10.1.17.203"//estadistica
     let server = "13.90.59.76"//Azure Chamaoke
     console.log("send data to "+server);
+    
    try {
      let data = await AsyncStorage.getItem('data');
      if (data !== null)//ya hay algo cargado?
@@ -28,7 +29,7 @@ export default class Home extends Component {
       // enviar la data
 
        // http://localhost/apiEncuestoff/public/api/carnaval/send
-       const myRequest = new Request('http://13.90.59.76/apiEncuestoff/public/api/carnaval/send',
+       const myRequest = new Request('http://'+server+'/apiencuestoff/public/api/carnaval/send',
          {
            method: 'POST',
            body: data
@@ -117,7 +118,8 @@ export default class Home extends Component {
 
   CleanData = async()=>{
     try {
-      AsyncStorage.removeItem('contador');
+      AsyncStorage.removeItem('data');
+      console.log("limpio");
     } catch (error) {
       console.log(error)
     }
@@ -138,6 +140,7 @@ export default class Home extends Component {
           <Button title="Nueva Encuesta" onPress={() => this.props.navigation.navigate("Encuesta")} />
           <Text></Text>
           <Button title="Subir Encuestas" onPress={this.enviar} />
+          {/* <Button title="Limpiar" onPress={this.CleanData} /> */}
           {/* <Button title="Test" onPress={this.test} /> */}
         </View>
         <View style={styles.header}>

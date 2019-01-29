@@ -16,9 +16,7 @@
       "resizeMode": "cover",
       "backgroundColor": "#88b14b"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
+
     "assetBundlePatterns": [
       "**/*"
     ],
