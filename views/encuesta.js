@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Button, Image, AsyncStorage} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, Image, AsyncStorage, TouchableOpacity} from 'react-native';
 import { Constants } from 'expo';
 import t from 'tcomb-form-native';
 import MultiSelect from 'react-native-multiple-select';
@@ -1216,12 +1216,13 @@ export default class Encuesta extends React.Component {
               
                
                 <View style={styles.header}>
-                    <Image source={require('../assets/images/iconito.png')} style={{ height: 50, resizeMode: "contain", flex: 1, marginLeft: 10 }}>
+                    <Image source={require('../assets/images/header.png')} style={{ height: 50, resizeMode: "contain", flex: 85 }} />
+                    <TouchableOpacity style={{ height: 50, flex: 15, marginLeft: 10,textAlign:"center"}} onPress={() => this.props.navigation.navigate("Home")}>
+                        <Image source={require('../assets/images/home.png')} style={{height:"90%",width:"90%"}}/>
 
-                    </Image>
-                    <Text style={styles.titulo} >
-                        Encuesta Carnaval
-        </Text>
+                    </TouchableOpacity>
+                    
+                    
                     <Text style={{ flex: 1 }} >
                     </Text>
                 </View>
@@ -1267,10 +1268,10 @@ export default class Encuesta extends React.Component {
                             />
                             
 
-                        <Button
-                            title="Enviar"
-                            onPress={this.saveData}
-                        />
+                      
+                        <TouchableOpacity onPress={this.saveData} style={styles.button}>
+                            <Text style={styles.buttonText}>Guardar</Text>
+                        </TouchableOpacity>
                     </View >
                 </ScrollView>
             </View>
@@ -1281,7 +1282,7 @@ export default class Encuesta extends React.Component {
 const styles = StyleSheet.create({
     header: {
         height: 50,
-        backgroundColor: "grey",
+        backgroundColor: "#7aba48",
         flexDirection: 'row',
 
     },
@@ -1300,7 +1301,7 @@ const styles = StyleSheet.create({
         // marginTop: 50,
         paddingLeft: 20,
         paddingRight: 20,
-        backgroundColor: '#88b14b',
+        backgroundColor: '#f2f2f0',
         
         // backgroundColor: '#ffffff',
     },
@@ -1312,6 +1313,18 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         flex: 9
+    },
+    button: {
+        marginBottom: 30,
+        // width: 260,
+        alignItems: 'center',
+        backgroundColor: '#8fbd4d',
+        
+    },
+    buttonText: {
+        padding: 20,
+        fontSize: 24,
+        color: 'white'
     }
 })
 
@@ -1319,6 +1332,10 @@ const styles = StyleSheet.create({
 // t.form.Form.stylesheet.controlLabel.normal.color ="white";
 t.form.Form.stylesheet.textbox.normal.backgroundColor = "white";
 t.form.Form.stylesheet.select.normal.backgroundColor = "white";
-t.form.Form.stylesheet.select.normal.borderRadius= 4
+
+t.form.Form.stylesheet.textbox.error.backgroundColor = "white";
+t.form.Form.stylesheet.select.error.backgroundColor = "white";
+
+
 
 
