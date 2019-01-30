@@ -180,7 +180,7 @@ export default class Home extends Component {
 
         </View>
         <View style={styles.header}>
-          <Text>{Constants.installationId}</Text>
+          <Text style={{ color: "#9a9a9a"}}>{Constants.installationId}</Text>
         </View>
       
 
@@ -194,8 +194,8 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   header:{
     marginTop: 10,
-    height: 20,
-    color:"#9a9a9a",
+    height: 30,
+    
     flexDirection: 'row',
   },
   padre:{
