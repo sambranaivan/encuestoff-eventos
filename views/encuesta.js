@@ -101,34 +101,34 @@ var options = {
             hidden: true
         },
         viaje: {
-            label: 'Con quien viaja?' // <= label for the name field
+            label: '¿Con quién viaja?' // <= label for the name field
         },
         informo: {
-            label: 'Como se infomó del evento?' // <= label for the name field
+            label: '¿Como se infomó del evento?' // <= label for the name field
         },
         motivo: {
-            label: 'Motivo del viaje?' // <= label for the name field
+            label: '¿Motivo del viaje?' // <= label for the name field
         },
         gastos: {
-            label: 'Cuanto estima que gastó durante la estadia?' // <= label for the name field
+            label: '¿Cuanto estima que gastó durante la estadia por persona por día?' // <= label for the name field
         },
         calificacion: {
-            label: 'Como califica el evento?' // <= label for the name field
+            label: '¿Como califica el evento?' // <= label for the name field
         },
         recomendaria: {
-            label: 'Recomendaria el evento?' // <= label for the name field
+            label: '¿Recomendaria el evento?' // <= label for the name field
         },
         alojamiento: {
-            label: 'Donde se aloja durante su estadía?' // <= label for the name field
+            label: '¿Donde se aloja durante su estadía?' // <= label for the name field
         },
         tipoalojamiento: {
-            label: 'En que tipo de Alojamiento?' // <= label for the name field
+            label: '¿En que tipo de Alojamiento?' // <= label for the name field
         },
         transporte: {
-            label: 'Medio de transporte utilizado?' // <= label for the name field
+            label: '¿Medio de transporte utilizado?' // <= label for the name field
         },
         primeravez: {
-            label: 'Primera vez que asiste?' // <= label for the name field
+            label: '¿Primera vez que asiste?' // <= label for the name field
         },
         edad: {
             label: "Edad", maxLength:2
@@ -1113,9 +1113,9 @@ export default class Encuesta extends React.Component {
                 data.push(nuevo);
                 //convierto de nuevo a string!
                 data = JSON.stringify(data);
-                //guardo en el coso
+                //guardo en el coso locol
                 AsyncStorage.setItem('data', data);
-                //muestro en consola
+                //muestro en consola por la dua
                 console.log("data")
                 console.log(data);
 
