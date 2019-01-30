@@ -168,7 +168,7 @@ export default class Home extends Component {
 
          
       
-           
+           <Button title="borrar" onPress={this.CleanData}/>
             
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Encuesta")} style={styles.button}>
             <Text style={styles.buttonText}>Nueva Encuesta</Text>

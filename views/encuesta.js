@@ -18,12 +18,12 @@ const User = t.struct({
     }, 'Sexo'),
     edad: t.Number,
   
-    viaje: t.enums({
+    viaje: t.maybe(t.enums({
         solo: 'Solo',
         pareja: 'Pareja',
         familia: 'Familia',
         amigos: 'Amigos',
-    }),
+    })),
     viaje_cantidad: t.maybe(t.Number),///autofill, condicional por viaje
     informo: t.enums({
         internet: 'Redes Sociales (Facebook, Instagram, Twitter, Whatsapp)',
@@ -31,26 +31,26 @@ const User = t.struct({
         otro:'Otro'
     }),
     otros_informo: t.maybe(t.String),//condicional de por donde se informo
-    motivo: t.enums({
+    motivo: t.maybe(t.enums({
         vacaciones: 'Vacaciones',
         religion: 'Religion',
         trabajo: "Trabajo",
         visita: "Visita Flia/Amigos",
         salud: "Salud",
         otro: "Otro"
-    }),
+    })),
     otro_motivo: t.maybe(t.String),//condicional de motivo de viaje
-    transporte: t.enums({
+    transporte: t.maybe(t.enums({
         omnibus: 'Omnibus',
         auto: 'Automovil',
         corrientes: 'Aeropuerto Corrientes',
         resistencia: 'Aeropuerto Resistencia',
         moto: 'Moto',
         otro: 'Otro'
-    }),
+    })),
     otro_transporte: t.maybe(t.String),//condicional de transporte de viaje
 
-    alojamiento: t.enums({
+    alojamiento: t.maybe(t.enums({
         corrientes: 'Corrientes',
         empedrado: 'Empedrado',
         itati: 'Itatí',
@@ -59,12 +59,12 @@ const User = t.struct({
         sancosme: 'San Cosme',
         santaana: 'Santa Ana de los Guacaras',
         resistencia: 'Resistencia'
-    }),
-    tipoalojamiento: t.enums({
+    })),
+    tipoalojamiento: t.maybe(t.enums({
        hotel:"Hotel",
        casa:"Casa",
        dpto:"Departamento"
-    }),
+    })),
 
     primeravez: t.enums({
         si: 'Si',
@@ -75,14 +75,14 @@ const User = t.struct({
         si: 'Si', no: 'No', talvez: 'talvez'
     }),
 
-    gastos: t.enums(
+    gastos: t.maybe(t.enums(
         {
             a: 'Menos de $500',
             b: 'de $500 a $1.000',
             c: 'entre $1.000 y $3.000',
             d: 'Más de $3.000',
             e: 'No sabe No Contesta'
-        }),
+        })),
     userid: t.String,timestamp: t.maybe(t.String)
 });
 
@@ -101,16 +101,20 @@ var options = {
             hidden: true
         },
         viaje: {
-            label: '¿Con quién viaja?' // <= label for the name field
+            label: '¿Con quién viaja?' ,// <= label for the name field
+            hidden:false
         },
         informo: {
-            label: '¿Como se infomó del evento?' // <= label for the name field
+            label: '¿Como se infomó del evento?' ,// <= label for the name field
+            hidden:false
         },
         motivo: {
-            label: '¿Motivo del viaje?' // <= label for the name field
+            label: '¿Motivo del viaje?' ,// <= label for the name field
+            hidden:false
         },
         gastos: {
-            label: '¿Cuanto estima que gastó durante la estadia por persona por día?' // <= label for the name field
+            label: '¿Cuanto estima que gastó durante la estadia por persona por día?', // <= label for the name field
+            hidden:false,
         },
         calificacion: {
             label: '¿Como califica el evento?' // <= label for the name field
@@ -119,19 +123,22 @@ var options = {
             label: '¿Recomendaria el evento?' // <= label for the name field
         },
         alojamiento: {
-            label: '¿Donde se aloja durante su estadía?' // <= label for the name field
+            label: '¿En que ciudad se aloja durante su estadía?' ,// <= label for the name field
+            hidden:false
         },
         tipoalojamiento: {
-            label: '¿En que tipo de Alojamiento?' // <= label for the name field
+            label: '¿En que tipo de alojamiento?' ,// <= label for the name field
+            hidden:false
         },
         transporte: {
-            label: '¿Medio de transporte utilizado?' // <= label for the name field
+            label: '¿Medio de transporte utilizado?' ,// <= label for the name field
+            hidden:false
         },
         primeravez: {
             label: '¿Primera vez que asiste?' // <= label for the name field
         },
         edad: {
-            label: "Edad", maxLength:2
+            label: "Edad", maxLength:2, hidden:false,
         },
 
         // condicionales
@@ -154,17 +161,95 @@ var options = {
 
 var default_values = {
     userid: Constants.installationId,
-    procedencia: null
+    procedencia: null,
+    edad:null,
+            viaje: null,
+            motivo: null,
+            alojamiento: null,
+            tipoalojamiento: null,
+            transporte: null,
+            gastos: null,
 }
 //  
 // // // // // // // // // // // // 
 
 
 
-
-
 // listado de provincias y paises
-var items = [
+const items = [
+    { name: "Corrientes", id: "Corrientes" },
+    { name: "Tres de Abril", id: "Tres de Abril" },
+    { name: "9 de Julio", id: "9 de Julio" },
+    { name: "Alvear", id: "Alvear" },
+    { name: "Bella Vista", id: "Bella Vista" },
+    { name: "Berón de Astrada", id: "Berón de Astrada" },
+    { name: "Bonpland", id: "Bonpland" },
+    { name: "Caá Catí", id: "Caá Catí" },
+    { name: "Colonia Carlos Pellegrini", id: "Colonia Carlos Pellegrini" },
+    { name: "Colonia Carolina", id: "Colonia Carolina" },
+    { name: "Chavarría", id: "Chavarría" },
+    { name: "Colonia Libertad", id: "Colonia Libertad" },
+    { name: "Colonia Liebig", id: "Colonia Liebig" },
+    { name: "Colonia Pando", id: "Colonia Pando" },
+    { name: "Concepción", id: "Concepción" },
+    { name: "Cruz de los Milagros", id: "Cruz de los Milagros" },
+    { name: "Curuzú Cuatiá", id: "Curuzú Cuatiá" },
+    { name: "Empedrado", id: "Empedrado" },
+    { name: "Esquina", id: "Esquina" },
+    { name: "Estación Torrent", id: "Estación Torrent" },
+    { name: "Felipe Yofre", id: "Felipe Yofre" },
+    { name: "Garabí", id: "Garabí" },
+    { name: "Garruchos", id: "Garruchos" },
+    { name: "Gobernador Martinez", id: "Gobernador Martinez" },
+    { name: "Gobernador V. Virasoro", id: "Gobernador V. Virasoro" },
+    { name: "Goya", id: "Goya" },
+    { name: "Guaviraví", id: "Guaviraví" },
+    { name: "Herliztka", id: "Herliztka" },
+    { name: "Ita Ibaté", id: "Ita Ibaté" },
+    { name: "Itatí", id: "Itatí" },
+    { name: "Ituzaingó", id: "Ituzaingó" },
+    { name: "José Rafael Gomez", id: "José Rafael Gomez" },
+    { name: "Juan Pujol", id: "Juan Pujol" },
+    { name: "La Cruz", id: "La Cruz" },
+    { name: "San Isidro", id: "San Isidro" },
+    { name: "Lomas de Vallejos", id: "Lomas de Vallejos" },
+    { name: "Loreto", id: "Loreto" },
+    { name: "Mariano I. Loza", id: "Mariano I. Loza" },
+    { name: "Mburucuyá", id: "Mburucuyá" },
+    { name: "Mercedes", id: "Mercedes" },
+    { name: "Mocoretá", id: "Mocoretá" },
+    { name: "Monte Caseros", id: "Monte Caseros" },
+    { name: "Pago de los Deseos", id: "Pago de los Deseos" },
+    { name: "Palmar Grande", id: "Palmar Grande" },
+    { name: "Parada Pucheta", id: "Parada Pucheta" },
+    { name: "Paso de la Patria", id: "Paso de la Patria" },
+    { name: "Paso de los Libres", id: "Paso de los Libres" },
+    { name: "Pedro R. Fernandez", id: "Pedro R. Fernandez" },
+    { name: "Perugorria", id: "Perugorria" },
+    { name: "Pueblo Libertador", id: "Pueblo Libertador" },
+    { name: "Lavalle", id: "Lavalle" },
+    { name: "Ramada Paso", id: "Ramada Paso" },
+    { name: "Riachuelo", id: "Riachuelo" },
+    { name: "Saladas", id: "Saladas" },
+    { name: "San Antonio de Apipe", id: "San Antonio de Apipe" },
+    { name: "San Carlos", id: "San Carlos" },
+    { name: "San Cosme", id: "San Cosme" },
+    { name: "San Lorenzo", id: "San Lorenzo" },
+    { name: "San Luis del Palmar", id: "San Luis del Palmar" },
+    { name: "San Miguel", id: "San Miguel" },
+    { name: "San Roque", id: "San Roque" },
+    { name: "Santa Ana de los Guacaras", id: "Santa Ana de los Guacaras" },
+    { name: "Santa Lucía", id: "Santa Lucía" },
+    { name: "Colonia Santa Rosa", id: "Colonia Santa Rosa" },
+    { name: "Santo Tome", id: "Santo Tome" },
+    { name: "Sauce", id: "Sauce" },
+    { name: "Tabay", id: "Tabay" },
+    { name: "Tapebicuá", id: "Tapebicuá" },
+    { name: "Tatacua", id: "Tatacua" },
+    { name: "Villa Olivari", id: "Villa Olivari" },
+    { name: "Yapeyú", id: "Yapeyú" },
+    { name: "Yatayti Calle", id: "Yatayti Calle" },
+    { name: "El Sombrero", id: "El Sombrero" },
     {
     name: "Capital Federal",
     id: "Capital Federal",
@@ -189,10 +274,7 @@ var items = [
         name: "Cordoba",
         id: "Cordoba",
     },
-    {
-        name: "Corrientes",
-        id: "Corrientes",
-    },
+  
     {
         name: "Entre Rios",
         id: "Entre Rios",
@@ -1078,14 +1160,44 @@ export default class Encuesta extends React.Component {
 
     onSelectedItemsChange = selectedItems => {
         this.setState({ selectedItems });
-        console.log(selectedItems)
         var update_values = this.state.value;
-        
-        
-        console.log(update_values);
-        console.log(selectedItems[0]);
         update_values.procedencia = selectedItems[0];
-        this.setState({value:update_values})
+        var update_options = this.state.options;
+        if (update_values.procedencia == "Corrientes")
+        {
+            update_options = t.update(update_options, {
+                fields: { 
+                    viaje: { hidden: { '$set': true } },
+                    // informo: { hidden: { '$set': true } },
+                    motivo: { hidden: { '$set': true } },
+                    alojamiento: { hidden: { '$set': true } },
+                    tipoalojamiento: { hidden: { '$set': true } },
+                    transporte: { hidden: { '$set': true } },
+                    gastos: { hidden: { '$set': true } },
+                }
+            });
+            // pongo valores "omitido" porque esta en corrientes
+         
+        }
+        else
+        {
+            update_options = t.update(update_options, {
+                fields: {
+                    viaje: { hidden: { '$set': false } },
+                    // informo: { hidden: { '$set': false } },
+                    motivo: { hidden: { '$set': false } },
+                    alojamiento: { hidden: { '$set': false } },
+                    tipoalojamiento: { hidden: { '$set': false } },
+                    transporte: { hidden: { '$set': false } },
+                    gastos: { hidden: { '$set': false } },
+                }
+            });
+           
+        }
+
+        this.setState({ options: update_options, value: update_values });
+
+        
     };
     
 
@@ -1100,7 +1212,7 @@ export default class Encuesta extends React.Component {
                 alert("complete todo los campos")
                 return
             }
-            
+
             let data = await AsyncStorage.getItem('data');
             if (data !== null)//ya hay algo cargado?
             {
@@ -1142,6 +1254,7 @@ export default class Encuesta extends React.Component {
         var update_options = this.state.options;
         
         // como se informo del evento?
+        console.log("onchange!!!!!");
         
        if(value.informo){ if(value.informo == 'otro'){
             update_options = t.update(update_options, {
