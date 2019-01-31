@@ -11,8 +11,8 @@ const Form = t.form.Form;
 // Esto va a cambiar a cada rato
 
 const User = t.struct({
-    latitud:t.maybe(t.String),
-    longitud:t.maybe(t.String),
+    latitud:t.maybe(t.Number),
+    longitud: t.maybe(t.Number),
     procedencia: t.String,
     sexo: t.enums({
         'F': 'Femenino',
@@ -179,7 +179,7 @@ var default_values = {
             gastos: null,
             latitud:null,
             longitud:null,
-            errorMessage:null
+            
 }
 //  
 // // // // // // // // // // // // 
