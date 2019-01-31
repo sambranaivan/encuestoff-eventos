@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Button, Image ,TouchableOpacity, AsyncStorage, Platform, Alert} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { Constants } from 'expo';
+import { Constants, Location, Permissions } from 'expo';
 
 
 
@@ -11,7 +11,9 @@ export default class Home extends Component {
     this.state = 
     {
       timestamp: new Date().getTime(),
-      spinner:false
+      spinner:false,
+      location:null,
+      errorMessage:null
     }
   }
 
@@ -148,9 +150,21 @@ export default class Home extends Component {
     }
   }
 
+  // GEO
+ 
+  // \GEO
+
   render() {
+    // let text = 'Waiting..';
+    // if (this.state.errorMessage) {
+    //   text = this.state.errorMessage;
+    // } else if (this.state.location) {
+    //   // text = JSON.stringify(this.state.location);
+    //   text = this.state.location.coords.longitude + "," + this.state.location.coords.latitude;
+    // }
     return (
       <View style={styles.padre}>
+        
         <View style={{
           marginTop: 10,
           height: 100,

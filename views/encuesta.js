@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Button, Image, AsyncStorage, TouchableOpacity} from 'react-native';
-import { Constants } from 'expo';
+import { StyleSheet, Text, View, ScrollView, Button, Platform,Image, AsyncStorage, TouchableOpacity} from 'react-native';
+import { Constants, Location, Permissions } from 'expo';
 import t from 'tcomb-form-native';
 import MultiSelect from 'react-native-multiple-select';
 
@@ -11,6 +11,8 @@ const Form = t.form.Form;
 // Esto va a cambiar a cada rato
 
 const User = t.struct({
+    latitud:t.maybe(t.String),
+    longitud:t.maybe(t.String),
     procedencia: t.String,
     sexo: t.enums({
         'F': 'Femenino',
@@ -89,6 +91,12 @@ const User = t.struct({
 
 var options = {
     fields: {
+        latitud:{
+            hidden:true
+        },
+        longitud: {
+            hidden: true
+        },
         userid:{
             hidden:true
         },
@@ -169,6 +177,9 @@ var default_values = {
             tipoalojamiento: null,
             transporte: null,
             gastos: null,
+            latitud:null,
+            longitud:null,
+            errorMessage:null
 }
 //  
 // // // // // // // // // // // // 
@@ -1154,7 +1165,9 @@ export default class Encuesta extends React.Component {
         this.state = { 
             options: options , 
             value:default_values,
-            selectedItems:[]
+            selectedItems:[],
+            location: null,
+            errorMessage: null
         };
     }
 
@@ -1313,13 +1326,45 @@ export default class Encuesta extends React.Component {
         var d = new Date()
         value.timestamp = d.getTime()+""
        
-       
-
-
-        this.setState({ options: update_options, value: value });
+        if (this.state.errorMessage) {
+            
+    } else if (this.state.location) {
+      // text = JSON.stringify(this.state.location);
+            value.longitud= this.state.location.coords.longitude ;
+            value.latitud =     this.state.location.coords.latitude;
     }
 
 
+        this.setState({ options: update_options, value: value });
+        console.log(value);
+    }
+
+    ///GEO
+ componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({ maximumAge : 300000});
+    this.setState({ location });
+    console.log("Get LOcation")
+    console.log(location);
+  }
+
+  ///GEO
 
     render() {
         const { selectedItems } = this.state;
