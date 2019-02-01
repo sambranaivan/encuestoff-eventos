@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView, Button, Image ,TouchableOpacity, AsyncStorage, Platform, Alert} from 'react-native';
+import { StyleSheet, Text, View, NetInfo, Image, TouchableOpacity, AsyncStorage, AppRegistry, Alert} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Constants, Location, Permissions } from 'expo';
 
@@ -13,13 +13,18 @@ export default class Home extends Component {
       timestamp: new Date().getTime(),
       spinner:false,
       location:null,
-      errorMessage:null
+      errorMessage:null,
+      isConnected: null,
     }
   }
 
-  
 
   enviar = async () => {
+    // check conecttion
+    if ( this.state.isConnected )
+    {
+
+    
     // let server = "192.168.1.15"//totolink
     // let server = "10.1.17.203"//estadistica
     // let server = "13.90.59.76"//Azure Chamaoke
@@ -79,7 +84,10 @@ export default class Home extends Component {
    } catch (error) {
      alert(error)
    }
-
+  }
+  else{
+    alert("No hay Coneccion a Internet");
+  }
 
   }
 
@@ -150,8 +158,29 @@ export default class Home extends Component {
     }
   }
 
-  // GEO
- 
+  // Check internte
+  componentDidMount() {
+    NetInfo.isConnected.addEventListener(
+      'connectionChange',
+      this._handleConnectivityChange
+    );
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({ isConnected }); }
+    );
+  }
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener(
+      'connectionChange',
+      this._handleConnectivityChange
+    );
+  }
+
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({
+      isConnected,
+    });
+  };
   // \GEO
 
   render() {
@@ -183,7 +212,7 @@ export default class Home extends Component {
          
       
            {/* <Button title="borrar" onPress={this.CleanData}/> */}
-            
+          <Text>{this.state.isConnected ? 'Online' : 'Offline'}</Text>
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Encuesta")} style={styles.button}>
             <Text style={styles.buttonText}>Nueva Encuesta</Text>
             </TouchableOpacity>
@@ -247,3 +276,4 @@ const styles = StyleSheet.create({
  
 })
 
+AppRegistry.registerComponent('NetworkCheck', () => IsConnected);

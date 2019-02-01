@@ -74,7 +74,7 @@ const User = t.struct({
     }),
 
     recomendaria: t.enums({
-        si: 'Si', no: 'No', talvez: 'talvez'
+        si: 'Si', no: 'No', talvez: 'tal vez'
     }),
 
     gastos: t.maybe(t.enums(
