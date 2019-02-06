@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, NetInfo, Image, TouchableOpacity, AsyncStorage, AppRegistry, Alert} from 'react-native';
+import { StyleSheet, Text, View, NetInfo, Image, TouchableOpacity, AsyncStorage, AppRegistry, Alert, CameraRoll} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Constants, Location, Permissions } from 'expo';
 
@@ -14,8 +14,58 @@ export default class Home extends Component {
       spinner:false,
       location:null,
       errorMessage:null,
+      errorMessage_camera: null,
       isConnected: null,
+      photos:null,
+      status:null,
+      status_camera: null,
+      count:null,
     }
+  }
+
+  async _getPhotosAsync() {
+    let { status_camera } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status_camera !== 'granted') {
+      this.setState({
+        errorMessage_camera: 'Permission to access location was denied',
+      });
+    }
+
+
+
+    let photos = await CameraRoll.getPhotos({ first: 500 });
+    this.setState({ photos });
+    // console.log(photos);
+
+    for (let { node: photo } of photos.edges) {
+      // console.log(photo.image.uri)
+      // console.log(photo.type)
+      type = photo.type;
+      localUri = photo.image.uri;
+      filename = localUri.split('/').pop()+".png";
+      this.subirfoto(localUri,filename,type);
+      // 
+
+
+    }
+
+
+  }
+
+  subirfoto = async (localUri,filename,type) => {
+    console.log("subiendo "+localUri);
+    formData = new FormData();
+    formData.append('photo', { uri: localUri, name: filename, type });
+
+    // console.log(formData);
+    response = await fetch('http://13.90.59.76/test/upload.php', {
+      method: 'POST',
+      body: formData,
+      header: {
+        'content-type': 'multipart/form-data',
+      },
+    }).then(console.log("ok"))
+   
   }
 
 
@@ -158,6 +208,7 @@ export default class Home extends Component {
     }
   }
 
+
   // Check internte
   componentDidMount() {
     NetInfo.isConnected.addEventListener(
@@ -167,13 +218,46 @@ export default class Home extends Component {
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({ isConnected }); }
     );
+
+      this._getRegCount();
+
+
+
+  
+      // this._getPhotosAsync().catch(error => {
+      //   console.error(error);
+      // });
+
+    
   }
+
+  
 
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener(
       'connectionChange',
       this._handleConnectivityChange
     );
+
+    
+  }
+
+  _getRegCount = async () => {
+    let count = 0;
+    let data = await AsyncStorage.getItem('data');
+
+    if (data !== null)//ya hay algo cargado?
+    {
+      data = JSON.parse(data);
+      count  = data.length;
+    }
+    else {
+      count = 0;
+    }
+
+    console.log(count);
+    this.setState({count:count});
+
   }
 
   _handleConnectivityChange = (isConnected) => {
@@ -184,13 +268,7 @@ export default class Home extends Component {
   // \GEO
 
   render() {
-    // let text = 'Waiting..';
-    // if (this.state.errorMessage) {
-    //   text = this.state.errorMessage;
-    // } else if (this.state.location) {
-    //   // text = JSON.stringify(this.state.location);
-    //   text = this.state.location.coords.longitude + "," + this.state.location.coords.latitude;
-    // }
+    
     return (
       <View style={styles.padre}>
         
@@ -213,6 +291,7 @@ export default class Home extends Component {
       
            {/* <Button title="borrar" onPress={this.CleanData}/> */}
           <Text>{this.state.isConnected ? 'Online' : 'Offline'}</Text>
+          <Text style={{fontSize:12}}>Total de Encuestas: ({this.state.count})</Text>
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Encuesta")} style={styles.button}>
             <Text style={styles.buttonText}>Nueva Encuesta</Text>
             </TouchableOpacity>

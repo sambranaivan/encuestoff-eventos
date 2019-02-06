@@ -74,14 +74,14 @@ const User = t.struct({
     }),
 
     recomendaria: t.enums({
-        si: 'Si', no: 'No', talvez: 'tal vez'
+        si: 'Si', no: 'No', talvez: 'Tal Vez'
     }),
 
     gastos: t.maybe(t.enums(
         {
             a: 'Menos de $500',
-            b: 'de $500 a $1.000',
-            c: 'entre $1.000 y $3.000',
+            b: 'De $500 a $1.000',
+            c: 'Entre $1.000 y $3.000',
             d: 'Más de $3.000',
             e: 'No sabe No Contesta'
         })),
@@ -1167,7 +1167,8 @@ export default class Encuesta extends React.Component {
             value:default_values,
             selectedItems:[],
             location: null,
-            errorMessage: null
+            errorMessage: null,
+            count:null,
         };
     }
 
@@ -1256,7 +1257,8 @@ export default class Encuesta extends React.Component {
 
             alert("Encuesta Guardada")
             this.setState({ value: null });
-            this.props.navigation.navigate("Home")
+            this.setState({count:data.length})
+            this.props.navigation.navigate("Home",{data:{count:this.state.count}})
         } catch (error) {
             console.log(error)
         }
@@ -1348,6 +1350,8 @@ export default class Encuesta extends React.Component {
     } else {
       this._getLocationAsync();
     }
+
+
   }
 
   _getLocationAsync = async () => {
@@ -1364,7 +1368,24 @@ export default class Encuesta extends React.Component {
     console.log(location);
   }
 
-  ///GEO
+  ///cout
+    _getRegCount = async () => {
+        let count = 0;
+        let data = await AsyncStorage.getItem('data');
+
+        if (data !== null)//ya hay algo cargado?
+        {
+            data = JSON.parse(data);
+            count = data.length;
+        }
+        else {
+            count = 0;
+        }
+
+        console.log(count);
+        this.setState({ count: count });
+
+    }
 
     render() {
         const { selectedItems } = this.state;
