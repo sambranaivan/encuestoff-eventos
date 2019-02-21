@@ -66,7 +66,8 @@ const User = t.struct({
     })),
     tipoalojamiento: t.maybe(t.enums({
        hotel:"Hotel",
-       casa:"Casa",
+       casa_familia:"Vivienda de Familiares o Amigos",
+       casa_alquilada:"Vivienda Alquilada",
        dpto:"Departamento"
     })),
 
