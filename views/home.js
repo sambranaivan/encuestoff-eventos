@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, NetInfo, Image, TouchableOpacity, AsyncStorage, AppRegistry, Alert, CameraRoll} from 'react-native';
+import { StyleSheet, Text, View, NetInfo, Image, TouchableOpacity, AsyncStorage, AppRegistry, Alert, CameraRoll, Button} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Constants, Location, Permissions } from 'expo';
 
@@ -195,6 +195,8 @@ export default class Home extends Component {
     try {
       AsyncStorage.removeItem('data');
       console.log("limpio");
+      alert("Encuestas Borradas, contador en 0")
+      this.setState({ count: 0 });
     } catch (error) {
       console.log(error)
     }
@@ -218,12 +220,10 @@ export default class Home extends Component {
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({ isConnected }); }
     );
-
+      ///inicializo el contador
       this._getRegCount();
+      
 
-
-
-  
       // this._getPhotosAsync().catch(error => {
       //   console.error(error);
       // });
@@ -255,9 +255,20 @@ export default class Home extends Component {
       count = 0;
     }
 
+    
+
     console.log(count);
     this.setState({count:count});
+    AsyncStorage.setItem('count', count.toString());
+    // a partir de aca leo las variables internas nomas?
+    setInterval(this._updateCount,30000)
 
+  }
+
+  _updateCount = async () =>{
+    let data = await AsyncStorage.getItem('count');
+    console.log(data);
+    this.setState({ count: data });
   }
 
   _handleConnectivityChange = (isConnected) => {
@@ -289,7 +300,7 @@ export default class Home extends Component {
 
          
       
-           {/* <Button title="borrar" onPress={this.CleanData}/> */}
+           <Button title="Limpiar Conteo" onPress={this.CleanData}/>
           <Text>{this.state.isConnected ? 'Online' : 'Offline'}</Text>
           <Text style={{fontSize:12}}>Total de Encuestas: ({this.state.count})</Text>
             <TouchableOpacity onPress={() => this.props.navigation.navigate("Encuesta")} style={styles.button}>

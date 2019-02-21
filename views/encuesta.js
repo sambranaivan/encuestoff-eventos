@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Button, Platform,Image, AsyncStorage, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button,Alert, Platform,Image, AsyncStorage, TouchableOpacity} from 'react-native';
 import { Constants, Location, Permissions } from 'expo';
 import t from 'tcomb-form-native';
 import MultiSelect from 'react-native-multiple-select';
@@ -11,8 +11,8 @@ const Form = t.form.Form;
 // Esto va a cambiar a cada rato
 
 const User = t.struct({
-    latitud:t.maybe(t.Number),
-    longitud: t.maybe(t.Number),
+    latitud:t.maybe(t.Number),///automaticos
+    longitud: t.maybe(t.Number),///automaticos
     procedencia: t.String,
     sexo: t.enums({
         'F': 'Femenino',
@@ -27,13 +27,15 @@ const User = t.struct({
         amigos: 'Amigos',
     })),
     viaje_cantidad: t.maybe(t.Number),///autofill, condicional por viaje
-    informo: t.enums({
+    informo: t.maybe(t.enums({
+        familia: 'Familia / Amigos',
         internet: 'Redes Sociales (Facebook, Instagram, Twitter, Whatsapp)',
         medios: 'Medios de Comunicación (tv, radio)',
         otro:'Otro'
-    }),
+    })),
     otros_informo: t.maybe(t.String),//condicional de por donde se informo
     motivo: t.maybe(t.enums({
+        carnaval: 'Carnaval',
         vacaciones: 'Vacaciones',
         religion: 'Religion',
         trabajo: "Trabajo",
@@ -73,9 +75,9 @@ const User = t.struct({
         no: 'No'
     }),
 
-    recomendaria: t.enums({
-        si: 'Si', no: 'No', talvez: 'Tal Vez'
-    }),
+    // recomendaria: t.enums({
+    //     si: 'Si', no: 'No', talvez: 'Tal Vez'
+    // }),
 
     gastos: t.maybe(t.enums(
         {
@@ -90,6 +92,10 @@ const User = t.struct({
 
 
 var options = {
+    i18n: {
+        optional: ' ',
+        required: ' '
+    },
     fields: {
         latitud:{
             hidden:true
@@ -147,6 +153,8 @@ var options = {
         },
         edad: {
             label: "Edad", maxLength:2, hidden:false,
+            optional: '',
+            required: ' (required)' // inverting the behaviour: adding a postfix to the required fields
         },
 
         // condicionales
@@ -175,6 +183,7 @@ var default_values = {
             motivo: null,
             alojamiento: null,
             tipoalojamiento: null,
+    informo: null,
             transporte: null,
             gastos: null,
             latitud:null,
@@ -1188,6 +1197,7 @@ export default class Encuesta extends React.Component {
                     tipoalojamiento: { hidden: { '$set': true } },
                     transporte: { hidden: { '$set': true } },
                     gastos: { hidden: { '$set': true } },
+                    informo: { hidden: { '$set': true } }
                 }
             });
             // pongo valores "omitido" porque esta en corrientes
@@ -1214,7 +1224,14 @@ export default class Encuesta extends React.Component {
         
     };
     
+    _updateCount = async () => {
+        let count = await AsyncStorage.getItem('count');
+        count = parseInt(count) + 1;
+        AsyncStorage.setItem('count', count.toString() );
+        console.log("update counte");
 
+        
+    }
 
 
     saveData = async () => {
@@ -1223,9 +1240,34 @@ export default class Encuesta extends React.Component {
             nuevo = this._form.getValue(); // use that ref to get the form value
             ///get current data
             if(!nuevo){
-                alert("complete todo los campos")
+                alert("Complete todo los campos");
                 return
             }
+
+            // validar campos opcionales
+            if(nuevo.procedencia !== "Corrientes" )
+            {
+                if (nuevo.viaje == undefined ||
+                    nuevo.motivo == undefined ||
+                    nuevo.transporte == undefined ||
+                    nuevo.alojamiento == undefined ||
+                    nuevo.tipoalojamiento == undefined ||
+                    nuevo.gastos == undefined ||
+                    nuevo.motivo == undefined
+                    
+                ) {
+                    alert("Complete todo los campos");
+                    return;
+                }
+            }
+           
+            
+            
+            
+            
+            
+
+
 
             let data = await AsyncStorage.getItem('data');
             if (data !== null)//ya hay algo cargado?
@@ -1256,9 +1298,12 @@ export default class Encuesta extends React.Component {
             }
 
             alert("Encuesta Guardada")
+
+
             this.setState({ value: null });
             this.setState({count:data.length})
-            this.props.navigation.navigate("Home",{data:{count:this.state.count}})
+            this._updateCount();
+            this.props.navigation.navigate("Home")
         } catch (error) {
             console.log(error)
         }
@@ -1514,7 +1559,5 @@ t.form.Form.stylesheet.select.normal.backgroundColor = "white";
 
 t.form.Form.stylesheet.textbox.error.backgroundColor = "white";
 t.form.Form.stylesheet.select.error.backgroundColor = "white";
-
-
 
 
