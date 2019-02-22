@@ -18,7 +18,7 @@ const User = t.struct({
         'F': 'Femenino',
         'M': 'Masculino'
     }, 'Sexo'),
-    edad: t.Number,
+    edad: t.Number,//TODO cambiar a rangos
   
     viaje: t.maybe(t.enums({
         solo: 'Solo',
@@ -41,6 +41,7 @@ const User = t.struct({
         trabajo: "Trabajo",
         visita: "Visita Flia/Amigos",
         salud: "Salud",
+        pesca: "Pesca",
         otro: "Otro"
     })),
     otro_motivo: t.maybe(t.String),//condicional de motivo de viaje
@@ -68,7 +69,8 @@ const User = t.struct({
        hotel:"Hotel",
        casa_familia:"Vivienda de Familiares o Amigos",
        casa_alquilada:"Vivienda Alquilada",
-       dpto:"Departamento"
+       dpto:"Departamento",
+       no_se_aloja: "No se Aloja"
     })),
 
     primeravez: t.enums({
@@ -153,7 +155,7 @@ var options = {
             label: '¿Primera vez que asiste?' // <= label for the name field
         },
         edad: {
-            label: "Edad", maxLength:2, hidden:false,
+            label: "Edad", hidden: false, maxLength: 2,
             optional: '',
             required: ' (required)' // inverting the behaviour: adding a postfix to the required fields
         },
@@ -1456,7 +1458,7 @@ export default class Encuesta extends React.Component {
                        <View>
                             <Text style={{
                                 fontSize: 17, marginBottom: 10,
-        fontWeight: '500'}}>Procedencia</Text>
+        fontWeight: '500'}}>Residencia</Text>
                                 
                         
                         </View>
@@ -1467,7 +1469,7 @@ export default class Encuesta extends React.Component {
                             ref={(component) => { this.multiSelect = component }}
                             onSelectedItemsChange={this.onSelectedItemsChange}
                             selectedItems={selectedItems}
-                            selectText="Procedencia"
+                            selectText="Residencia"
                             searchInputPlaceholderText="Buscar..."
                             onChangeInput={(text) => console.log(text)}
                             // altFontFamily="ProximaNova-Light"

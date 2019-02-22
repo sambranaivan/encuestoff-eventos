@@ -254,14 +254,13 @@ export default class Home extends Component {
     else {
       count = 0;
     }
-
-    
+   
 
     console.log(count);
     this.setState({count:count});
     AsyncStorage.setItem('count', count.toString());
     // a partir de aca leo las variables internas nomas?
-    setInterval(this._updateCount,30000)
+    setInterval(this._updateCount,15000)
 
   }
 
